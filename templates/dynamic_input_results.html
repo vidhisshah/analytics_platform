@@ -1,0 +1,72 @@
+<h3>Columns:</h3>
+<ul>
+{% for value in values %}
+    <li>{{value}}</li>
+{% endfor %}
+</ul>
+<h3>Null count:</h3>
+<ul>
+{% for value in null_count %}
+    <li>{{value}}</li>
+{% endfor %}
+</ul>
+<h3>Glimpse:</h3>
+
+{{head|safe}}
+
+<h3>Enter columns to drop:</h3>
+<!-- <div>Hello</div>
+<div>
+	{{values}}
+</div> -->
+
+<script>
+  function add_field()
+  {
+    var total_text=document.getElementsByClassName("input_text");
+    total_text=total_text.length+1;
+    field_div = document.getElementById("field_div");
+    new_input = "<li id='input_text"+total_text+
+    "_wrapper'><input type='text' class='input_text' name='input_text[]' id='input_text"+
+    total_text+"' placeholder='Enter column to drop'></li>";
+    field_div.insertAdjacentHTML('beforeend',new_input);
+  }
+  function remove_field()
+  {
+    var total_text=document.getElementsByClassName("input_text");
+    document.getElementById("input_text"+total_text.length+"_wrapper").remove();
+  }
+</script>
+
+<div class = "container">
+  <form action='/results_drop' method="post">
+    <div id="wrapper">
+      
+      
+      <ol id="field_div">
+        <li id='input_text"+total_text+"_wrapper'><input type='text' class='input_text' name='input_text[]' id='input_text"+
+    total_text+"' placeholder='Enter column name'></li>
+      </ol>
+
+      <input type="button" value="Drop another column" onclick="add_field();">
+      <br>
+      <br>
+      <h3> Enter column to be predicted </h3>
+      <input type="text" name="target" placeholder="Enter target name">
+      <!-- <input type="button" value="Remove TextBox" onclick="remove_field();"> -->
+      <br>
+      <br>
+      <br>
+      <br>
+      <h3> Enter ratio of train test split </h3>
+      <input type="text" name="split_ratio" placeholder="Enter ratio" value='0.3'>
+      <p>eg: 0.3 implies 70% data for training set and 30% data for validation</p>
+      <br>
+      <br>
+      <h3>Oversampling</h3>
+      <input type="text" name="smote_ratio" placeholder="Enter ratio" value='0.0'>
+      <p>eg: 0.3 will oversample data to contain minimum 30% of minority class</p>
+    </div>
+    <input type='submit' value='Submit'>
+  </form>
+</div>
