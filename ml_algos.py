@@ -64,7 +64,7 @@ def lgbm_algo(X_train, X_test, y_train, y_test, html_res):
     return html_res, lgbm  
 
 # XGBoost
-def xgb_algo(X_train, X_test, y_train, y_test, html_res):
+def xgb_algo_r(X_train, X_test, y_train, y_test, html_res):
     from xgboost import XGBClassifier
     xgb = XGBClassifier()
     xgb.fit(X_train, y_train)
@@ -77,6 +77,22 @@ def xgb_algo(X_train, X_test, y_train, y_test, html_res):
     html_res+="\nRecall: "+ str(round(recall_score(y_test, predictions_xgb, average=avg),2))
     html_res+="\nPrecision: "+ str(round(precision_score(y_test, predictions_xgb, average=avg),2))
     return html_res, xgb
+
+# XGBoost
+def xgb_algo(X_train, X_test, y_train, y_test, html_res):
+    from xgboost import XGBClassifier
+    xgb = XGBClassifier()
+    xgb.fit(X_train, y_train)
+    y_pred_xgb = xgb.predict(X_test)
+    # predictions_xgb = [round(value) for value in y_pred_xgb]
+    predictions_xgb = y_pred_xgb 
+    accuracy_xgb = accuracy_score(y_test, predictions_xgb)
+    html_res+="\nAccuracy: " + str(round(accuracy_xgb * 100.0,2))+"%\n"
+    html_res+=str(confusion_matrix(y_test, predictions_xgb))
+    avg = 'binary' if len(set(y_train.tolist()))==2 else 'micro'
+    html_res+="\nRecall: "+ str(round(recall_score(y_test, predictions_xgb, average=avg),2))
+    html_res+="\nPrecision: "+ str(round(precision_score(y_test, predictions_xgb, average=avg),2))
+    return html_res, xgb    
 
 
 # Gaussian Naive Bayes

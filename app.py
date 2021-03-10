@@ -35,10 +35,10 @@ def execut(X_train, X_test, y_train, y_test):
     html_res, rf_model = rf_algo(X_train, X_test, y_train, y_test, html_res)   
     html_res+="\n\n***Light GBM***\n"
     html_res, lgbm_model = lgbm_algo(X_train, X_test, y_train, y_test, html_res)
-    # html_res+="\n\n***XG Boost***\n"
-    # html_res, xgb_model = xgb_algo(X_train, X_test, y_train, y_test, html_res)
-    # html_res+="\n\n***SVM***\n"
-    # html_res, svm_model = svm_algo(X_train, X_test, y_train, y_test, html_res)
+    html_res+="\n\n***XG Boost***\n"
+    html_res, xgb_model = xgb_algo(X_train, X_test, y_train, y_test, html_res)
+    html_res+="\n\n***SVM***\n"
+    html_res, svm_model = svm_algo(X_train, X_test, y_train, y_test, html_res)
     html_res+="\n\n***Gaussian Naive Bayes***\n"
     html_res, gnb_model = gnb_algo(X_train, X_test, y_train, y_test, html_res)
     html_res+="\n\n***Multinomial Naive Bayes***\n"
@@ -47,11 +47,14 @@ def execut(X_train, X_test, y_train, y_test):
     # html_res, lr_model = linear_reg_algo(X_train, X_test, y_train, y_test, html_res)
     # html_res+="\n\n***Logistic Regression***\n"
     # html_res, logr_model = logistic_reg_algo(X_train, X_test, y_train, y_test, html_res)
-    pickle.dump(rf_model,open('rf_model.pkl','wb'))
-    pickle.dump(gnb_model, open('gnb_model.pkl','wb'))
-    pickle.dump(mnb_model, open('mnb_model.pkl', 'wb'))
-    # return html_res, rf_model, xgb_model, svm_model, gnb_model, mnb_model, lr_model, logr_model
-    return html_res, rf_model, lgbm_model, "", "", gnb_model, mnb_model, "", ""
+    ## SAVE MODELS TO USE FOR PREDICTION
+    # pickle.dump(rf_model,open('rf_model.pkl','wb'))
+    # pickle.dump(gnb_model, open('gnb_model.pkl','wb'))
+    # pickle.dump(mnb_model, open('mnb_model.pkl', 'wb'))
+    #FOR REGRESSION
+    # return html_res, rf_model_r, lgbm_model, xgb_model, svm_model, gnb_model, mnb_model, lr_model, logr_model
+    #FOR CLASSIFICATION
+    return html_res, rf_model, lgbm_model, xgb_model, svm_model, gnb_model, mnb_model, "", ""
 
 def concat_files(files_list):
     #can later convert to checking number of files of csv or xlsx in folder
@@ -126,7 +129,8 @@ def results():
         print("NULL COUNT")
         null_count = [(col, df[col].isnull().sum()) for col in df.columns]
         return render_template('dynamic_input_results.html',
-                               values = df.columns.tolist(), null_count=null_count, head=df.head().to_html())
+                               values = df.columns.tolist(), null_count=null_count, 
+                               head=df.head().to_html(), info=df.dtypes)
 
 
 @app.route('/results_drop', methods = ['GET', 'POST'])
@@ -148,16 +152,12 @@ def results_drop():
     if float(smote_ratio)>0:
         X_train, X_test, y_train, y_test = smote_data(X_train, X_test, y_train, y_test)
     html_res, rf_model, lgbm_model, xgb_model, svm_model, gnb_model, mnb_model, lr_model, logr_model = execut(X_train, X_test, y_train, y_test)
-    print("RF", rf_model)
-    print("LGBM", lgbm_model)
     return render_template('train_results.html', html_res=html_res)
 
 @app.route('/predict', methods=['GET', 'POST'])    
 def predict():
     global X, rf_model, lgbm_model, xgb_model, svm_model, gnb_model, mnb_model, lr_model, logr_model
     results_df = "ERROR"
-    print("rf_model:", rf_model)
-    # print("lgbm_model:", lgbm_model)
     if request.method == 'GET':
         return redirect(url_for('/'))
     else:
