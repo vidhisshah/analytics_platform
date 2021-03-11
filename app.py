@@ -177,6 +177,10 @@ def predict():
             return "Column mismatch"    
     return results_df.to_html(classes='data')
 
+@app.route('/dummy', methods=['GET', 'POST'])    
+def dummy():
+	return render_template('dummy.html')
+
 
 def calc_rocauc(Y_test):
     ns_probs = [0 for _ in range(len(Y_test))]

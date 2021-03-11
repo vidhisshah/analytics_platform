@@ -1,3 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body style="margin-left: 2%;">
+
+
 <h3>Columns:</h3>
 <ul>
 {% for value in values %}
@@ -17,8 +25,11 @@
 <h3>Info:</h3>
 
 {{info}}
-
-<h3>Enter columns to drop:</h3>
+</br></br>
+<!-- <form> -->
+  <!-- <input type="button" value="View Detailed Analysis of Columns" onclick="openWin()"> -->
+<!-- </form> -->
+<!-- <h3>Enter columns to drop:</h3> -->
 <!-- <div>Hello</div>
 <div>
 	{{values}}
@@ -40,10 +51,17 @@
     var total_text=document.getElementsByClassName("input_text");
     document.getElementById("input_text"+total_text.length+"_wrapper").remove();
   }
+
+  // for viewing pandas profiling file
+  function openWin() {
+  window.open("dummy");
+}
 </script>
 
 <div class = "container">
   <form action='/results_drop' method="post">
+    <input type="button" value="View Detailed Analysis of Columns" onclick="openWin()">
+    <h3>Enter columns to drop:</h3>
     <div id="wrapper">
       
       
@@ -53,6 +71,27 @@
       </ol>
 
       <input type="button" value="Drop another column" onclick="add_field();">
+      <br>
+      <br>
+<!-- Add button an redirect to a new page?s -->
+      <h3>Create New column</h3>
+      <input type='text' class='input_text' name='new_col' id='new_col' placeholder='Enter new column name'>
+      <br>
+      <br>
+      <input type='text' class='input_text' name='new_col' id='new_col' placeholder='Enter existing column name'>
+      <label for="option">Choose operator</label>
+  <select name="operation" id="operation">
+    <option value="lessthan"><</option>
+    <option value="greaterthan">></option>
+    <option value="equal">=</option>
+    <option value="add">+</option>
+    <option value="multiply">*</option>
+    <option value="subtract">-</option>
+    <option value="divide">/</option>
+    <option value="or">OR</option>
+    <option value="and">AND</option>
+  </select>
+  <input type='text' class='input_text' name='new_col' id='new_col' placeholder='Enter value or column name'>
       <br>
       <br>
       <h3> Enter column to be predicted </h3>
@@ -74,3 +113,5 @@
     <input type='submit' value='Submit'>
   </form>
 </div>
+</body>
+</html>
